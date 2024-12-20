@@ -1,1 +1,48 @@
+//@version=6
+
+//indicator("Simple MA Crossover", overlay=true)
+strategy("EA")
+
+
+RandomTime = input(false)
+StopLosses = input(false)
+TakeProfit = input(false)
+PaperTradeTest = input(false)
+
+Identifier = input(12345)
+StopInPoints = input(50)
+TakeProfitInPoints = input(200)
+LotSize = input(.1)
+MovingAverage = input(21, title="Fast MA Period")
+
+MovingAverageType = input('SMA')
+Timeframe = input(60)
+
+//void OrderEntry(ENUM_TIMEFRAMES timeframe, bool stop_loss, 
+//int stop_in_points, bool take_profit, int take_profit_in_points, int magic_number, double lot_size)
+
+OrderEntry(timeframe, stop_loss, stop_in_points, take_profit, take_profit_in_points, moving_average, magic_number, lot_size) => 
+    close_price_1 = close[1]
+    close_price_2 = close[2]
+    ma = ta.sma(close, moving_average)
+    if close_price_1 > close_price_2 and close_price_1 > ma[1] and ma[1] > ma[2]
+        strategy.entry("Long", strategy.long) 
+    if close_price_1 < close_price_2 and close_price_1 < ma[1] and ma[1] < ma[2]
+        strategy.entry("Short", strategy.short)
+
+
+
+//fastMA = ta.sma(close,MovingAverage)
+OrderEntry(Timeframe,StopLosses, StopInPoints,TakeProfit,TakeProfitInPoints,MovingAverage,Identifier,LotSize)
+
+//plot(fastMA, color=color.rgb(100,250,150,25), title="Fast MA" )
+
+
+
+
+
+// plotshape(sellSignal, title="Sell Signal", location= location.belowbar, color=color.red, style=shape.labeldown, text="SELL")
+
+
+
 
