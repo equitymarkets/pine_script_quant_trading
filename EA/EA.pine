@@ -14,12 +14,13 @@ stop_in_points = input(50)
 take_profit_in_points = input(200)
 lot_size = input(.1)
 moving_average = input(21, title="Fast MA Period")
-quantity = input(1.0)
+quantity = input(3.0)
 moving_average_type = input('SMA')
 time_frame = input(60)
 
 ma_fast = input(21)
 ma_slow = input(89)
+
 
 plot(ta.sma(close, ma_fast), title="50 SMA", color=#00DB00, linewidth=1)
 plot(ta.sma(close, ma_slow), title="100 SMA", color=#FC8A10, linewidth=1)
@@ -30,7 +31,19 @@ if(longCondition)
     strategy.entry('long', strategy.long, qty = quantity)
 if(shortCondition)
     strategy.entry('short', strategy.short, qty = quantity)
+if strategy.opentrades > 0
+    if strategy.position_size > 0
+        strategy.exit('SL/TP1', from_entry = 'long', stop = strategy.position_avg_price - 30, comment_loss = 'Long SL', limit = strategy.position_avg_price + 20, comment_profit = 'Long TP', qty = 2.0)
+        strategy.exit('SL/TP2', from_entry = 'long', stop = strategy.position_avg_price - 30, comment_loss = 'Long SL', limit = strategy.position_avg_price + 40, comment_profit = 'Long TP', qty = 1.0)
+    if strategy.position_size < 0
+        strategy.exit('SL/TP1', from_entry = 'short', stop = strategy.position_avg_price + 30, comment_loss = 'Long SL', limit = strategy.position_avg_price - 20, comment_profit = 'Short TP', qty = 2.0)
+        strategy.exit('SL/TP2', from_entry = 'short', stop = strategy.position_avg_price + 30, comment_loss = 'Long SL', limit = strategy.position_avg_price - 40, comment_profit = 'Short TP', qty = 1.0)
 
+
+
+
+
+// plotshape(sellSignal, title="Sell Signal", location= location.belowbar, color=color.red, style=shape.labeldown, text="SELL")
 
 
 
