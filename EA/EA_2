@@ -1,0 +1,27 @@
+// © d1price0001
+
+//@version=6
+strategy("EA_2", overlay=true, fill_orders_on_standard_ohlc = true)
+
+ma_fast = input(21, "fast moving average")
+ma_slow = input(34, "slow moving average")
+vwap_price = input(high, "vwap price")
+
+
+//default 5 min. 
+// longCondition = ta.crossover(ta.sma(close, ma_fast), ta.sma(close, ma_slow))
+// filter = ta.vwap(vwap_price)
+// if (longCondition and close > filter)
+//     strategy.entry("My Long Entry Id", strategy.long)
+
+// shortCondition = ta.crossunder(ta.sma(close, ma_fast), ta.sma(close, ma_slow))
+// if (shortCondition and close < filter)
+//     strategy.entry("My Short Entry Id", strategy.short)
+
+//default 30 min. 
+longCondition = ta.crossover(vwap_price, ta.sma(close, ma_fast))
+if(longCondition)
+    strategy.entry("Long Entry", strategy.long)
+shortCondition = ta.crossunder(vwap_price, ta.sma(close, ma_fast))
+if(shortCondition)
+    strategy.entry("Short Entry",strategy.short)
