@@ -1,0 +1,43 @@
+//@version=6
+//strategy("Range", overlay=true, fill_orders_on_standard_ohlc = true)
+indicator("Range", overlay = true)
+
+pair1 = input.string("USDJPY")
+pair2 = input.string("EURUSD")
+pair3 = input.string("GBPUSD")
+pair4 = input.string("USDCHF")
+
+//not currently used
+period = input.string("240")
+
+float highPrice1 = request.security(pair1, timeframe.period, high)
+float lowPrice1 = request.security(pair1, timeframe.period, low)
+float pairRange1 = (highPrice1 - lowPrice1)/request.security(pair1,period,close)*100
+float highPrice2 = request.security(pair2, timeframe.period, high)
+float lowPrice2 = request.security(pair2, timeframe.period, low)
+float pairRange2 = (highPrice2 - lowPrice2)/request.security(pair2,period,close)*100
+float highPrice3 = request.security(pair3, timeframe.period, high)
+float lowPrice3 = request.security(pair3, timeframe.period, low)
+float pairRange3 = (highPrice3 - lowPrice3)/request.security(pair3,period,close)*100
+float highPrice4 = request.security(pair4, timeframe.period, high)
+float lowPrice4 = request.security(pair4, timeframe.period, low)
+float pairRange4 = (highPrice4 - lowPrice4)/request.security(pair4,period,close)*100
+
+float meanRange = (pairRange1 + pairRange2 + pairRange3 + pairRange4)/4
+
+var table spreadDisplay = table.new(position.top_right, 1, 1)
+
+table.set_bgcolor(spreadDisplay, color.white)
+
+// float highPrice = request.security(pair1, period, high)
+// float lowPrice = request.security(pair1, period, low)
+float highPrice = request.security(syminfo.tickerid, timeframe.period, high)
+float lowPrice = request.security(syminfo.tickerid, timeframe.period, low)
+
+float pairRange = highPrice - lowPrice
+
+if barstate.islast
+    if pairRange > meanRange
+        table.cell(spreadDisplay, 0, 0, str.tostring("volatile"))
+    else
+        table.cell(spreadDisplay, 0, 0, str.tostring("not volatile"))
